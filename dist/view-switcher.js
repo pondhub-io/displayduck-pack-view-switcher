@@ -1,36 +1,36 @@
-const A = /* @__PURE__ */ new Map(), x = (t) => String(t ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;"), O = (t) => {
-  const e = A.get(t);
+const _ = /* @__PURE__ */ new Map(), N = (t) => String(t ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;"), x = (t) => {
+  const e = _.get(t);
   if (e)
     return e;
-  const s = t.replace(/\bthis\b/g, "__item"), n = new Function("scope", `with (scope) { return (${s}); }`);
-  return A.set(t, n), n;
-}, g = (t, e) => {
+  const n = t.replace(/\bthis\b/g, "__item"), s = new Function("scope", `with (scope) { return (${n}); }`);
+  return _.set(t, s), s;
+}, w = (t, e) => {
   try {
-    return O(t)(e);
+    return x(t)(e);
   } catch {
     return "";
   }
-}, w = (t, e = 0, s) => {
-  const n = [];
+}, m = (t, e = 0, n) => {
+  const s = [];
   let i = e;
   for (; i < t.length; ) {
     const r = t.indexOf("{{", i);
     if (r === -1)
-      return n.push({ type: "text", value: t.slice(i) }), { nodes: n, index: t.length };
-    r > i && n.push({ type: "text", value: t.slice(i, r) });
+      return s.push({ type: "text", value: t.slice(i) }), { nodes: s, index: t.length };
+    r > i && s.push({ type: "text", value: t.slice(i, r) });
     const o = t.indexOf("}}", r + 2);
     if (o === -1)
-      return n.push({ type: "text", value: t.slice(r) }), { nodes: n, index: t.length };
+      return s.push({ type: "text", value: t.slice(r) }), { nodes: s, index: t.length };
     const a = t.slice(r + 2, o).trim();
     if (i = o + 2, a === "/if" || a === "/each") {
-      if (s === a)
-        return { nodes: n, index: i };
-      n.push({ type: "text", value: `{{${a}}}` });
+      if (n === a)
+        return { nodes: s, index: i };
+      s.push({ type: "text", value: `{{${a}}}` });
       continue;
     }
     if (a.startsWith("#if ")) {
-      const c = w(t, i, "/if");
-      n.push({
+      const c = m(t, i, "/if");
+      s.push({
         type: "if",
         condition: a.slice(4).trim(),
         children: c.nodes
@@ -38,111 +38,98 @@ const A = /* @__PURE__ */ new Map(), x = (t) => String(t ?? "").replaceAll("&", 
       continue;
     }
     if (a.startsWith("#each ")) {
-      const c = w(t, i, "/each");
-      n.push({
+      const c = m(t, i, "/each");
+      s.push({
         type: "each",
         source: a.slice(6).trim(),
         children: c.nodes
       }), i = c.index;
       continue;
     }
-    n.push({ type: "expr", value: a });
+    s.push({ type: "expr", value: a });
   }
-  return { nodes: n, index: i };
-}, m = (t, e) => {
-  let s = "";
-  for (const n of t) {
-    if (n.type === "text") {
-      s += n.value;
+  return { nodes: s, index: i };
+}, y = (t, e) => {
+  let n = "";
+  for (const s of t) {
+    if (s.type === "text") {
+      n += s.value;
       continue;
     }
-    if (n.type === "expr") {
-      s += x(g(n.value, e));
+    if (s.type === "expr") {
+      n += N(w(s.value, e));
       continue;
     }
-    if (n.type === "if") {
-      g(n.condition, e) && (s += m(n.children, e));
+    if (s.type === "if") {
+      w(s.condition, e) && (n += y(s.children, e));
       continue;
     }
-    const i = g(n.source, e);
+    const i = w(s.source, e);
     if (Array.isArray(i))
       for (const r of i) {
         const o = Object.create(e);
-        o.__item = r, s += m(n.children, o);
+        o.__item = r, n += y(s.children, o);
       }
   }
-  return s;
-}, P = (t) => {
-  const e = w(t).nodes;
-  return (s) => m(e, s);
+  return n;
+}, F = (t) => {
+  const e = m(t).nodes;
+  return (n) => y(e, n);
 };
-function F(t, e = !1) {
+function P(t, e = !1) {
   return window.__TAURI_INTERNALS__.transformCallback(t, e);
 }
-async function l(t, e = {}, s) {
-  return window.__TAURI_INTERNALS__.invoke(t, e, s);
+async function u(t, e = {}, n) {
+  return window.__TAURI_INTERNALS__.invoke(t, e, n);
 }
-function W(t, e = "asset") {
+function U(t, e = "asset") {
   return window.__TAURI_INTERNALS__.convertFileSrc(t, e);
 }
-var b;
+var S;
 (function(t) {
-  t.WINDOW_RESIZED = "tauri://resize", t.WINDOW_MOVED = "tauri://move", t.WINDOW_CLOSE_REQUESTED = "tauri://close-requested", t.WINDOW_DESTROYED = "tauri://destroyed", t.WINDOW_FOCUS = "tauri://focus", t.WINDOW_BLUR = "tauri://blur", t.WINDOW_SCALE_FACTOR_CHANGED = "tauri://scale-change", t.WINDOW_THEME_CHANGED = "tauri://theme-changed", t.WINDOW_CREATED = "tauri://window-created", t.WINDOW_SUSPENDED = "tauri://suspended", t.WINDOW_RESUMED = "tauri://resumed", t.WEBVIEW_CREATED = "tauri://webview-created", t.DRAG_ENTER = "tauri://drag-enter", t.DRAG_OVER = "tauri://drag-over", t.DRAG_DROP = "tauri://drag-drop", t.DRAG_LEAVE = "tauri://drag-leave";
-})(b || (b = {}));
-async function N(t, e) {
-  window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(t, e), await l("plugin:event|unlisten", {
+  t.WINDOW_RESIZED = "tauri://resize", t.WINDOW_MOVED = "tauri://move", t.WINDOW_CLOSE_REQUESTED = "tauri://close-requested", t.WINDOW_DESTROYED = "tauri://destroyed", t.WINDOW_FOCUS = "tauri://focus", t.WINDOW_BLUR = "tauri://blur", t.WINDOW_SCALE_FACTOR_CHANGED = "tauri://scale-change", t.WINDOW_THEME_CHANGED = "tauri://theme-changed", t.WINDOW_CREATED = "tauri://window-created", t.WEBVIEW_CREATED = "tauri://webview-created", t.DRAG_ENTER = "tauri://drag-enter", t.DRAG_OVER = "tauri://drag-over", t.DRAG_DROP = "tauri://drag-drop", t.DRAG_LEAVE = "tauri://drag-leave";
+})(S || (S = {}));
+async function V(t, e) {
+  window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(t, e), await u("plugin:event|unlisten", {
     event: t,
     eventId: e
   });
 }
-async function h(t, e, s) {
-  var n;
-  const i = (n = void 0) !== null && n !== void 0 ? n : { kind: "Any" };
-  return l("plugin:event|listen", {
+async function h(t, e, n) {
+  var s;
+  const i = (s = void 0) !== null && s !== void 0 ? s : { kind: "Any" };
+  return u("plugin:event|listen", {
     event: t,
     target: i,
-    handler: F(e)
-  }).then((r) => async () => N(t, r));
+    handler: P(e)
+  }).then((r) => async () => V(t, r));
 }
-async function S(t, e) {
-  await l("plugin:event|emit", {
-    event: t,
-    payload: e
-  });
-}
-async function _(t, e, s) {
-  await l("plugin:event|emit_to", {
-    target: { kind: "AnyLabel", label: t },
-    event: e,
-    payload: s
-  });
-}
-const V = "pack-tcp-socket-open", D = "pack-tcp-socket-data", $ = "pack-tcp-socket-close", M = 5e3, q = (t) => {
+const $ = "pack-tcp-socket-open", M = "pack-tcp-socket-data", q = "pack-tcp-socket-close", G = 5e3, H = (t) => {
   let e = "";
-  for (let s = 0; s < t.length; s += 1)
-    e += String.fromCharCode(t[s]);
+  for (let n = 0; n < t.length; n += 1)
+    e += String.fromCharCode(t[n]);
   return btoa(e);
-}, H = (t) => {
-  const e = atob(t), s = new Uint8Array(e.length);
-  for (let n = 0; n < e.length; n += 1)
-    s[n] = e.charCodeAt(n);
-  return s;
-}, G = (t) => t instanceof Uint8Array ? t : t instanceof ArrayBuffer ? new Uint8Array(t) : Uint8Array.from(t), j = () => typeof crypto < "u" && typeof crypto.randomUUID == "function" ? crypto.randomUUID() : `tcp-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-class z {
-  constructor(e, s) {
-    this.hasEventAccess = s, this.isConnected = !1, this.connecting = null, this.tauriListenersReady = null, this.tauriUnlisteners = [], this.listeners = {
+}, j = (t) => {
+  const e = atob(t), n = new Uint8Array(e.length);
+  for (let s = 0; s < e.length; s += 1)
+    n[s] = e.charCodeAt(s);
+  return n;
+}, z = (t) => t instanceof Uint8Array ? t : t instanceof ArrayBuffer ? new Uint8Array(t) : Uint8Array.from(t), J = () => typeof crypto < "u" && typeof crypto.randomUUID == "function" ? crypto.randomUUID() : `tcp-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+class Q {
+  constructor(e, n) {
+    this.hasLocalhostAccess = n, this.isConnected = !1, this.connecting = null, this.tauriListenersReady = null, this.tauriUnlisteners = [], this.listeners = {
       open: /* @__PURE__ */ new Set(),
       data: /* @__PURE__ */ new Set(),
       close: /* @__PURE__ */ new Set(),
       error: /* @__PURE__ */ new Set()
-    }, this.host = String(e.host ?? "").trim(), this.port = Number(e.port), this.sessionId = j();
+    }, this.host = String(e.host ?? "").trim(), this.port = Number(e.port), this.sessionId = J();
   }
   get connected() {
     return this.isConnected;
   }
   async connect() {
-    if (!this.hasEventAccess)
-      throw new Error("TCP socket access requires the Allow event access permission.");
+    if (!this.hasLocalhostAccess)
+      throw new Error("TCP socket access requires the Allow localhost access permission.");
     if (!this.isConnected) {
       if (this.connecting)
         return this.connecting;
@@ -159,9 +146,10 @@ class z {
   async send(e) {
     if (!this.isConnected)
       throw new Error("TCP socket is not connected.");
-    await l("pack_tcp_socket_write", {
+    await u("pack_tcp_socket_write", {
       sessionId: this.sessionId,
-      dataBase64: q(G(e))
+      dataBase64: H(z(e)),
+      allowLocalhostAccess: this.hasLocalhostAccess
     });
   }
   async write(e) {
@@ -169,61 +157,61 @@ class z {
   }
   async close() {
     try {
-      await l("pack_tcp_socket_disconnect", { sessionId: this.sessionId });
+      await u("pack_tcp_socket_disconnect", { sessionId: this.sessionId });
     } finally {
       this.isConnected = !1, this.teardownTauriListeners();
     }
   }
-  on(e, s) {
-    return this.listeners[e].add(s), () => this.listeners[e].delete(s);
+  on(e, n) {
+    return this.listeners[e].add(n), () => this.listeners[e].delete(n);
   }
   async connectInternal() {
-    await this.ensureTauriListeners(), await new Promise(async (e, s) => {
-      let n = !1;
+    await this.ensureTauriListeners(), await new Promise(async (e, n) => {
+      let s = !1;
       const i = setTimeout(() => {
-        n || (n = !0, a(), s(new Error(`TCP socket connection timed out for ${this.host}:${this.port}`)));
-      }, M), r = this.on("open", () => {
-        n || (n = !0, a(), e());
+        s || (s = !0, a(), n(new Error(`TCP socket connection timed out for ${this.host}:${this.port}`)));
+      }, G), r = this.on("open", () => {
+        s || (s = !0, a(), e());
       }), o = this.on("close", (c) => {
-        n || (n = !0, a(), s(new Error(c.error ?? "TCP socket closed before opening.")));
+        s || (s = !0, a(), n(new Error(c.error ?? "TCP socket closed before opening.")));
       }), a = () => {
         clearTimeout(i), r(), o();
       };
       try {
-        await l("pack_tcp_socket_connect", {
+        await u("pack_tcp_socket_connect", {
           sessionId: this.sessionId,
           host: this.host,
           port: this.port,
-          allowEventAccess: this.hasEventAccess
+          allowLocalhostAccess: this.hasLocalhostAccess
         });
       } catch (c) {
-        if (n) return;
-        n = !0, a(), s(c);
+        if (s) return;
+        s = !0, a(), n(c);
       }
     });
   }
   async ensureTauriListeners() {
     return this.tauriListenersReady ? this.tauriListenersReady : (this.tauriListenersReady = (async () => {
       this.tauriUnlisteners = [
-        await h(V, (e) => {
+        await h($, (e) => {
           e.payload.sessionId === this.sessionId && (this.isConnected = !0, this.emit("open", {
             host: this.host,
             port: this.port
           }));
         }),
-        await h(D, (e) => {
+        await h(M, (e) => {
           if (e.payload.sessionId === this.sessionId)
             try {
-              this.emit("data", H(e.payload.dataBase64));
-            } catch (s) {
+              this.emit("data", j(e.payload.dataBase64));
+            } catch (n) {
               this.emit("error", {
                 host: this.host,
                 port: this.port,
-                error: s instanceof Error ? s.message : "Invalid TCP socket data."
+                error: n instanceof Error ? n.message : "Invalid TCP socket data."
               });
             }
         }),
-        await h($, (e) => {
+        await h(q, (e) => {
           e.payload.sessionId === this.sessionId && (this.isConnected = !1, e.payload.error && this.emit("error", {
             host: this.host,
             port: this.port,
@@ -245,106 +233,106 @@ class z {
       }
     this.tauriUnlisteners = [], this.tauriListenersReady = null;
   }
-  emit(e, s) {
-    for (const n of this.listeners[e])
-      n(s);
+  emit(e, n) {
+    for (const s of this.listeners[e])
+      s(n);
   }
 }
-const J = (t) => {
+const Y = (t) => {
   if (typeof t != "function")
     return !1;
   const e = t;
   return e._isSignal === !0 && typeof e.set == "function" && typeof e.subscribe == "function";
-}, E = (t) => {
+}, b = (t) => {
   let e = t;
-  const s = /* @__PURE__ */ new Set(), n = (() => e);
-  return n._isSignal = !0, n.set = (i) => {
+  const n = /* @__PURE__ */ new Set(), s = (() => e);
+  return s._isSignal = !0, s.set = (i) => {
     if (!Object.is(e, i)) {
       e = i;
-      for (const r of s)
+      for (const r of n)
         r(e);
     }
-  }, n.update = (i) => {
-    n.set(i(e));
-  }, n.subscribe = (i) => (s.add(i), () => s.delete(i)), n;
-}, K = (t, e = "") => l("controller_widget_focus_view", {
+  }, s.update = (i) => {
+    s.set(i(e));
+  }, s.subscribe = (i) => (n.add(i), () => n.delete(i)), s;
+}, Z = (t, e = "") => u("controller_widget_focus_view", {
   configuredWidgetId: t,
   requestId: e
-}), Q = async (t, e) => {
-  const s = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  let n = null, i = null;
+}), K = async (t, e) => {
+  const n = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  let s = null, i = null;
   const r = new Promise((o) => {
     i = o;
   });
   try {
-    return n = await h(
+    return s = await h(
       "displayduck-widget-focus-state-response",
       (o) => {
-        o.payload.requestId !== s || o.payload.configuredWidgetId !== t || i?.(o.payload.focused === !0);
+        o.payload.requestId !== n || o.payload.configuredWidgetId !== t || i?.(o.payload.focused === !0);
       }
-    ), await l("controller_widget_get_focus_state", {
+    ), await u("controller_widget_get_focus_state", {
       configuredWidgetId: t,
       focusRequestId: e,
-      requestId: s
+      requestId: n
     }), await Promise.race([
       r,
       new Promise((o) => setTimeout(() => o(!1), 1e3))
     ]);
   } finally {
-    n?.();
+    s?.();
   }
-}, X = (t, e, s) => l("controller_widget_set_focus_requirement", {
+}, X = (t, e, n) => u("controller_widget_set_focus_requirement", {
   configuredWidgetId: t,
   required: e,
-  requestId: s
-}), Y = (t, e) => {
-  const s = [];
-  for (const n of Object.keys(t)) {
-    const i = t[n];
-    J(i) && s.push(i.subscribe(() => e()));
+  requestId: n
+}), B = (t, e) => {
+  const n = [];
+  for (const s of Object.keys(t)) {
+    const i = t[s];
+    Y(i) && n.push(i.subscribe(() => e()));
   }
   return () => {
-    for (const n of s)
-      n();
+    for (const s of n)
+      s();
   };
-}, Z = (t, e) => new Proxy(
+}, tt = (t, e) => new Proxy(
   { payload: e },
   {
-    get(s, n) {
-      if (typeof n != "string")
+    get(n, s) {
+      if (typeof s != "string")
         return;
-      if (n in s)
-        return s[n];
-      const i = t[n];
+      if (s in n)
+        return n[s];
+      const i = t[s];
       return typeof i == "function" ? i.bind(t) : i;
     },
-    has(s, n) {
-      return typeof n != "string" ? !1 : n in s || n in t;
+    has(n, s) {
+      return typeof s != "string" ? !1 : s in n || s in t;
     }
   }
-), B = ["src", "href", "poster"], tt = "{{pack-install-path}}/", I = "{{ASSETS}}", et = (t) => {
+), et = ["src", "href", "poster"], st = "{{pack-install-path}}/", E = "{{ASSETS}}", nt = (t) => {
   const e = t.trim();
   return e.length === 0 || e.startsWith("data:") || e.startsWith("blob:") || e.startsWith("http://") || e.startsWith("https://") || e.startsWith("file:") || e.startsWith("asset:") || e.startsWith("mailto:") || e.startsWith("tel:") || e.startsWith("javascript:") || e.startsWith("//") || e.startsWith("/") || e.startsWith("#");
-}, nt = (t) => {
+}, it = (t) => {
   const e = t.trim();
   if (!e)
     return null;
-  if (!et(e))
+  if (!nt(e))
     return e.replace(/^\.\/+/, "").replace(/^\/+/, "");
   if (e.startsWith("http://") || e.startsWith("https://"))
     try {
-      const s = new URL(e);
-      if (s.origin === window.location.origin)
-        return `${s.pathname}${s.search}${s.hash}`.replace(/^\/+/, "");
+      const n = new URL(e);
+      if (n.origin === window.location.origin)
+        return `${n.pathname}${n.search}${n.hash}`.replace(/^\/+/, "");
     } catch {
       return null;
     }
   return null;
-}, st = (t, e) => {
-  const s = t.replaceAll("\\", "/").replace(/\/+$/, ""), n = `${s}/${e.trim()}`, i = n.split("/"), r = [];
+}, rt = (t, e) => {
+  const n = t.replaceAll("\\", "/").replace(/\/+$/, ""), s = `${n}/${e.trim()}`, i = s.split("/"), r = [];
   for (const o of i) {
     if (!o || o === ".") {
-      r.length === 0 && n.startsWith("/") && r.push("");
+      r.length === 0 && s.startsWith("/") && r.push("");
       continue;
     }
     if (o === "..") {
@@ -353,97 +341,97 @@ const J = (t) => {
     }
     r.push(o);
   }
-  return r.join("/") || s;
+  return r.join("/") || n;
 }, p = (t, e) => {
-  const s = nt(e);
-  if (!t || !s)
+  const n = it(e);
+  if (!t || !n)
     return e;
   try {
-    return W(st(t, s));
+    return U(rt(t, n));
   } catch {
     return e;
   }
-}, it = (t) => {
+}, ot = (t) => {
   const e = t.trim().replaceAll("\\", "/").replace(/\/+$/, "");
   if (!e)
     return "";
   try {
-    return W(e);
+    return U(e);
   } catch {
     return e;
   }
-}, rt = (t, e) => t.split(",").map((s) => {
-  const n = s.trim();
-  if (!n)
-    return n;
-  const [i, r] = n.split(/\s+/, 2), o = p(e, i);
+}, ct = (t, e) => t.split(",").map((n) => {
+  const s = n.trim();
+  if (!s)
+    return s;
+  const [i, r] = s.split(/\s+/, 2), o = p(e, i);
   return r ? `${o} ${r}` : o;
-}).join(", "), ot = (t, e) => t.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/gi, (s, n, i) => {
+}).join(", "), at = (t, e) => t.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/gi, (n, s, i) => {
   const r = p(e, i);
-  return r === i ? s : `url("${r}")`;
-}), y = (t, e) => {
-  for (const i of B) {
+  return r === i ? n : `url("${r}")`;
+}), A = (t, e) => {
+  for (const i of et) {
     const r = t.getAttribute(i);
     if (!r)
       continue;
     const o = p(e, r);
     o !== r && t.setAttribute(i, o);
   }
-  const s = t.getAttribute("srcset");
-  if (s) {
-    const i = rt(s, e);
-    i !== s && t.setAttribute("srcset", i);
-  }
-  const n = t.getAttribute("style");
+  const n = t.getAttribute("srcset");
   if (n) {
-    const i = ot(n, e);
-    i !== n && t.setAttribute("style", i);
+    const i = ct(n, e);
+    i !== n && t.setAttribute("srcset", i);
+  }
+  const s = t.getAttribute("style");
+  if (s) {
+    const i = at(s, e);
+    i !== s && t.setAttribute("style", i);
   }
 }, R = (t, e) => {
   if (e) {
-    t instanceof Element && y(t, e);
-    for (const s of Array.from(t.querySelectorAll("*")))
-      y(s, e);
+    t instanceof Element && A(t, e);
+    for (const n of Array.from(t.querySelectorAll("*")))
+      A(n, e);
   }
-}, C = (t, e) => {
+}, I = (t, e) => {
   if (!e)
     return t;
-  let s = t;
-  const n = it(e);
-  return n && s.includes(I) && (s = s.replaceAll(I, n)), s.includes(tt) ? s.replace(/\{\{pack-install-path\}\}\/([^"')\s]+)/g, (i, r) => p(e, r)) : s;
-}, ct = (t) => {
-  const e = /@font-face\s*\{[^{}]*\}/gi, s = t.match(e)?.join(`
+  let n = t;
+  const s = ot(e);
+  return s && n.includes(E) && (n = n.replaceAll(E, s)), n.includes(st) ? n.replace(/\{\{pack-install-path\}\}\/([^"')\s]+)/g, (i, r) => p(e, r)) : n;
+}, lt = (t) => {
+  const e = /@font-face\s*\{[^{}]*\}/gi, n = t.match(e)?.join(`
 `) ?? "";
   return {
-    scopedStyles: s ? t.replace(e, "") : t,
-    fontStyles: s
+    scopedStyles: n ? t.replace(e, "") : t,
+    fontStyles: n
   };
-}, at = (t, e) => class {
+}, ut = (t, e) => class {
   constructor({
-    mount: n,
+    mount: s,
     payload: i,
     setLoading: r
   }) {
-    this.cleanups = [], this.hasRendered = !1, this.renderScheduled = !1, this.destroyed = !1, this.globalFontStyle = null, this.focusRequestId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`, this.widgetDirectory = "", this.mount = n, this.payload = i ?? {}, this.setLoading = typeof r == "function" ? r : (() => {
+    this.cleanups = [], this.hasRendered = !1, this.renderScheduled = !1, this.destroyed = !1, this.globalFontStyle = null, this.focusRequestId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`, this.widgetDirectory = "", this.mount = s, this.payload = i ?? {}, this.setLoading = typeof r == "function" ? r : (() => {
     }), this.assetObserver = new MutationObserver((o) => {
       if (this.widgetDirectory)
         for (const a of o) {
           if (a.type === "attributes" && a.target instanceof Element) {
-            y(a.target, this.widgetDirectory);
+            A(a.target, this.widgetDirectory);
             continue;
           }
           for (const c of Array.from(a.addedNodes))
             c instanceof Element && R(c, this.widgetDirectory);
         }
     }), this.logic = new t({
-      mount: n,
+      mount: s,
       payload: this.payload,
       setLoading: (o) => this.setLoading(!!o),
-      focusWidgetView: () => K(
+      focusWidgetView: () => Z(
         String(this.payload?.configuredWidgetId ?? "").trim(),
         this.focusRequestId
       ),
-      isWidgetViewFocused: () => Q(
+      isWidgetViewFocused: () => K(
         String(this.payload?.configuredWidgetId ?? "").trim(),
         this.focusRequestId
       ),
@@ -452,12 +440,12 @@ const J = (t) => {
         !!o,
         this.focusRequestId
       ),
-      createTcpSocket: (o) => new z(
+      createTcpSocket: (o) => new Q(
         o,
-        this.hasEventAccessPermission()
+        this.hasLocalhostAccessPermission()
       ),
       on: (o, a, c) => this.on(o, a, c)
-    }), this.cleanupSignalSubscriptions = Y(this.logic, () => this.scheduleRender()), this.assetObserver.observe(this.mount, {
+    }), this.cleanupSignalSubscriptions = B(this.logic, () => this.scheduleRender()), this.assetObserver.observe(this.mount, {
       subtree: !0,
       childList: !0,
       attributes: !0,
@@ -467,120 +455,140 @@ const J = (t) => {
   onInit() {
     this.render(), this.logic.onInit?.();
   }
-  onUpdate(n) {
-    this.payload = n ?? {}, this.logic.onUpdate?.(this.payload), this.render();
+  onUpdate(s) {
+    this.payload = s ?? {}, this.logic.onUpdate?.(this.payload), this.render();
   }
   onDestroy() {
     for (this.destroyed = !0, this.renderScheduled = !1, this.globalFontStyle?.remove(), this.globalFontStyle = null, this.cleanupSignalSubscriptions(); this.cleanups.length > 0; )
       this.cleanups.pop()?.();
     this.assetObserver.disconnect(), this.logic.onDestroy?.(), this.mount.innerHTML = "", this.hasRendered = !1;
   }
-  hasEventAccessPermission() {
-    const n = this.payload?.config;
-    return !!(n && typeof n == "object" && n.allowEventAccess === !0);
+  hasLocalhostAccessPermission() {
+    const s = this.payload?.config;
+    return !!(s && typeof s == "object" && s.allowEventAccess === !0);
   }
   render() {
     this.renderScheduled = !1;
-    const n = Z(this.logic, this.payload);
+    const s = tt(this.logic, this.payload);
     this.widgetDirectory = String(
       this.payload?.widgetDirectory ?? this.payload?.directory ?? ""
     ).trim();
-    const i = C(e.template, this.widgetDirectory), r = C(e.styles, this.widgetDirectory), { scopedStyles: o, fontStyles: a } = ct(r);
+    const i = I(e.template, this.widgetDirectory), r = I(e.styles, this.widgetDirectory), { scopedStyles: o, fontStyles: a } = lt(r);
     this.syncGlobalFontStyle(a);
-    const d = P(i)(n), u = `<style>${o}</style>${d}`;
-    this.hasRendered ? this.reconcileMarkup(u) : (this.mount.innerHTML = u, this.hasRendered = !0), this.mount.setAttribute("data-displayduck-render-empty", d.trim().length === 0 ? "true" : "false"), R(this.mount, this.widgetDirectory), this.logic.afterRender?.();
+    const d = F(i)(s), l = `<style>${o}</style>${d}`;
+    this.hasRendered ? this.reconcileMarkup(l) : (this.mount.innerHTML = l, this.hasRendered = !0), this.mount.setAttribute("data-displayduck-render-empty", d.trim().length === 0 ? "true" : "false"), R(this.mount, this.widgetDirectory), this.logic.afterRender?.();
   }
-  syncGlobalFontStyle(n) {
-    if (!n) {
+  syncGlobalFontStyle(s) {
+    if (!s) {
       this.globalFontStyle?.remove(), this.globalFontStyle = null;
       return;
     }
-    this.globalFontStyle || (this.globalFontStyle = this.mount.ownerDocument.createElement("style"), this.globalFontStyle.dataset.displayduckPackFonts = "true", this.mount.ownerDocument.head.appendChild(this.globalFontStyle)), this.globalFontStyle.textContent !== n && (this.globalFontStyle.textContent = n);
+    this.globalFontStyle || (this.globalFontStyle = this.mount.ownerDocument.createElement("style"), this.globalFontStyle.dataset.displayduckPackFonts = "true", this.mount.ownerDocument.head.appendChild(this.globalFontStyle)), this.globalFontStyle.textContent !== s && (this.globalFontStyle.textContent = s);
   }
   scheduleRender() {
     this.renderScheduled || this.destroyed || (this.renderScheduled = !0, queueMicrotask(() => {
       !this.destroyed && this.renderScheduled && this.render();
     }));
   }
-  reconcileMarkup(n) {
+  reconcileMarkup(s) {
     const i = document.createElement("div");
-    i.innerHTML = n, this.reconcileChildren(this.mount, i);
+    i.innerHTML = s, this.reconcileChildren(this.mount, i);
   }
-  reconcileChildren(n, i) {
-    const r = Array.from(n.childNodes), o = Array.from(i.childNodes), a = Math.min(r.length, o.length);
+  reconcileChildren(s, i) {
+    const r = Array.from(s.childNodes), o = Array.from(i.childNodes), a = Math.min(r.length, o.length);
     for (let c = 0; c < a; c += 1)
       this.reconcileNode(r[c], o[c]);
     for (let c = a; c < o.length; c += 1)
-      n.appendChild(o[c].cloneNode(!0));
+      s.appendChild(o[c].cloneNode(!0));
     for (let c = r.length - 1; c >= o.length; c -= 1)
       r[c].remove();
   }
-  reconcileNode(n, i) {
-    if (n.nodeType !== i.nodeType) {
-      n.replaceWith(i.cloneNode(!0));
+  reconcileNode(s, i) {
+    if (s.nodeType !== i.nodeType) {
+      s.replaceWith(i.cloneNode(!0));
       return;
     }
-    if (n.nodeType === Node.TEXT_NODE) {
-      n.nodeValue !== i.nodeValue && (n.nodeValue = i.nodeValue);
+    if (s.nodeType === Node.TEXT_NODE) {
+      s.nodeValue !== i.nodeValue && (s.nodeValue = i.nodeValue);
       return;
     }
-    if (!(!(n instanceof Element) || !(i instanceof Element))) {
-      if (n.tagName !== i.tagName) {
-        n.replaceWith(i.cloneNode(!0));
+    if (!(!(s instanceof Element) || !(i instanceof Element))) {
+      if (s.tagName !== i.tagName) {
+        s.replaceWith(i.cloneNode(!0));
         return;
       }
-      for (const r of Array.from(n.attributes))
-        i.hasAttribute(r.name) || n.removeAttribute(r.name);
+      for (const r of Array.from(s.attributes))
+        i.hasAttribute(r.name) || s.removeAttribute(r.name);
       for (const r of Array.from(i.attributes))
-        n.getAttribute(r.name) !== r.value && n.setAttribute(r.name, r.value);
-      this.reconcileChildren(n, i);
+        s.getAttribute(r.name) !== r.value && s.setAttribute(r.name, r.value);
+      this.reconcileChildren(s, i);
     }
   }
-  on(n, i, r) {
+  on(s, i, r) {
     const o = (c) => {
-      const u = c.target?.closest(i);
-      !u || !this.mount.contains(u) || r(c, u);
+      const l = c.target?.closest(i);
+      !l || !this.mount.contains(l) || r(c, l);
     };
-    this.mount.addEventListener(n, o);
-    const a = () => this.mount.removeEventListener(n, o);
+    this.mount.addEventListener(s, o);
+    const a = () => this.mount.removeEventListener(s, o);
     return this.cleanups.push(a), a;
   }
 };
+async function g(t, e = {}, n) {
+  return window.__TAURI_INTERNALS__.invoke(t, e, n);
+}
+var W;
+(function(t) {
+  t.WINDOW_RESIZED = "tauri://resize", t.WINDOW_MOVED = "tauri://move", t.WINDOW_CLOSE_REQUESTED = "tauri://close-requested", t.WINDOW_DESTROYED = "tauri://destroyed", t.WINDOW_FOCUS = "tauri://focus", t.WINDOW_BLUR = "tauri://blur", t.WINDOW_SCALE_FACTOR_CHANGED = "tauri://scale-change", t.WINDOW_THEME_CHANGED = "tauri://theme-changed", t.WINDOW_CREATED = "tauri://window-created", t.WINDOW_SUSPENDED = "tauri://suspended", t.WINDOW_RESUMED = "tauri://resumed", t.WEBVIEW_CREATED = "tauri://webview-created", t.DRAG_ENTER = "tauri://drag-enter", t.DRAG_OVER = "tauri://drag-over", t.DRAG_DROP = "tauri://drag-drop", t.DRAG_LEAVE = "tauri://drag-leave";
+})(W || (W = {}));
+async function C(t, e) {
+  await g("plugin:event|emit", {
+    event: t,
+    payload: e
+  });
+}
+async function L(t, e, n) {
+  await g("plugin:event|emit_to", {
+    target: { kind: "AnyLabel", label: t },
+    event: e,
+    payload: n
+  });
+}
 var f;
 (function(t) {
   t[t.Audio = 1] = "Audio", t[t.Cache = 2] = "Cache", t[t.Config = 3] = "Config", t[t.Data = 4] = "Data", t[t.LocalData = 5] = "LocalData", t[t.Document = 6] = "Document", t[t.Download = 7] = "Download", t[t.Picture = 8] = "Picture", t[t.Public = 9] = "Public", t[t.Video = 10] = "Video", t[t.Resource = 11] = "Resource", t[t.Temp = 12] = "Temp", t[t.AppConfig = 13] = "AppConfig", t[t.AppData = 14] = "AppData", t[t.AppLocalData = 15] = "AppLocalData", t[t.AppCache = 16] = "AppCache", t[t.AppLog = 17] = "AppLog", t[t.Desktop = 18] = "Desktop", t[t.Executable = 19] = "Executable", t[t.Font = 20] = "Font", t[t.Home = 21] = "Home", t[t.Runtime = 22] = "Runtime", t[t.Template = 23] = "Template";
 })(f || (f = {}));
-var v;
+var T;
 (function(t) {
   t[t.Start = 0] = "Start", t[t.Current = 1] = "Current", t[t.End = 2] = "End";
-})(v || (v = {}));
-async function lt(t, e) {
+})(T || (T = {}));
+async function dt(t, e) {
   if (t instanceof URL && t.protocol !== "file:")
     throw new TypeError("Must be a file URL.");
-  const s = await l("plugin:fs|read_text_file", {
+  const n = await g("plugin:fs|read_text_file", {
     path: t instanceof URL ? t.toString() : t,
     options: e
-  }), n = s instanceof ArrayBuffer ? s : Uint8Array.from(s);
-  return new TextDecoder(e?.encoding ?? "utf-8").decode(n);
+  }), s = n instanceof ArrayBuffer ? n : Uint8Array.from(n);
+  return new TextDecoder(e?.encoding ?? "utf-8").decode(s);
 }
-async function ut(t, e, s) {
+async function ht(t, e, n) {
   if (t instanceof URL && t.protocol !== "file:")
     throw new TypeError("Must be a file URL.");
-  const n = new TextEncoder();
-  await l("plugin:fs|write_text_file", n.encode(e), {
+  const s = new TextEncoder();
+  await g("plugin:fs|write_text_file", s.encode(e), {
     headers: {
       path: encodeURIComponent(t instanceof URL ? t.toString() : t),
-      options: JSON.stringify(s)
+      options: JSON.stringify(n)
     }
   });
 }
-const T = (t) => {
+const O = (t) => {
   const e = t.config;
   return e && typeof e == "object" ? e : {};
 };
-let dt = class {
+let ft = class {
   constructor(e) {
-    this.ctx = e, this.destroyed = !1, this.config = E(T(e.payload ?? {})), this.view = E(this.getConfiguredView(this.config()));
+    this.ctx = e, this.destroyed = !1, this.config = b(O(e.payload ?? {})), this.view = b(this.getConfiguredView(this.config()));
   }
   onInit() {
     this.ctx.on("click", "[data-view-switcher]", () => {
@@ -588,38 +596,38 @@ let dt = class {
     });
   }
   onUpdate(e) {
-    this.config.set(T(e ?? {})), this.view.set(this.getConfiguredView(this.config()));
+    this.config.set(O(e ?? {})), this.view.set(this.getConfiguredView(this.config()));
   }
   onDestroy() {
     this.destroyed = !0;
   }
   getConfiguredView(e) {
-    const s = Number(e.view ?? 1);
-    return Number.isFinite(s) && s >= 1 ? Math.floor(s) : 1;
+    const n = Number(e.view ?? 1);
+    return Number.isFinite(n) && n >= 1 ? Math.floor(n) : 1;
   }
   async setView(e) {
     if (!this.destroyed)
       try {
-        const s = await lt("config.dd", { baseDir: f.AppConfig }), n = JSON.parse(s), i = Array.isArray(n.views) ? n.views : [], r = e - 1;
+        const n = await dt("config.dd", { baseDir: f.AppConfig }), s = JSON.parse(n), i = Array.isArray(s.views) ? s.views : [], r = e - 1;
         if (!i[r]) return;
-        const o = i.map((U, k) => ({ ...U, active: k === r })), a = { ...n, views: o };
-        await ut("config.dd", JSON.stringify(a, null, 2), { baseDir: f.AppConfig });
-        const c = o[r], d = { config: a }, u = {
+        const o = i.map((D, v) => ({ ...D, active: v === r })), a = { ...s, views: o };
+        await ht("config.dd", JSON.stringify(a, null, 2), { baseDir: f.AppConfig });
+        const c = o[r], d = { config: a }, l = {
           viewId: c.id ?? "",
           view: { ...c, widgets: Array.isArray(c.widgets) ? c.widgets : [] }
         };
-        await S("displayduck-update", d), await _("display", "displayduck-update", d), await S("displayduck-active-view-updated", u), await _("display", "displayduck-active-view-updated", u);
-      } catch (s) {
-        console.error("[DisplayDuck View Switcher] failed to switch view", s);
+        await C("displayduck-update", d), await L("display", "displayduck-update", d), await C("displayduck-active-view-updated", l), await L("display", "displayduck-active-view-updated", l);
+      } catch (n) {
+        console.error("[DisplayDuck View Switcher] failed to switch view", n);
       }
   }
 };
-const ht = `<div class="view" data-view-switcher>
+const pt = `<div class="view" data-view-switcher>
   <div class="label">{{ view() }}</div>
 </div>
-`, ft = ".view{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#fff;background:#0000002e;cursor:pointer;-webkit-user-select:none;user-select:none}.label{padding:.2em .45em;font-size:clamp(1.5rem,30cqw,4rem);font-weight:700}", L = at(dt, { template: ht, styles: ft }), pt = L, mt = { DisplayDuckWidget: L, Widget: pt };
+`, gt = ".view{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#fff;background:#0000002e;cursor:pointer;-webkit-user-select:none;user-select:none}.label{padding:.2em .45em;font-size:clamp(1.5rem,30cqw,4rem);font-weight:700}", k = ut(ft, { template: pt, styles: gt }), wt = k, At = { DisplayDuckWidget: k, Widget: wt };
 export {
-  L as DisplayDuckWidget,
-  pt as Widget,
-  mt as default
+  k as DisplayDuckWidget,
+  wt as Widget,
+  At as default
 };
