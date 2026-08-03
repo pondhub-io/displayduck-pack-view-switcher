@@ -4,8 +4,10 @@
     "development": "displayduck-compile-pack --pack-dir . --watch"
   },
   "devDependencies": {
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-fs": "^2.5.1",
     "@displayduck/base": "^0.2.1",
     "@displayduck/compiler": "^0.2.3"
   },
-  "main": "./dist/example.js"
+  "main": "./dist/view-switcher.js"
 }

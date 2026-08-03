@@ -1,55 +1,27 @@
 {
-    "icon": "fas fa-bug",
-    "name": "Example Widget",
-    "description": "This is an example widget for development purposes.",
-    "assets": ["img"],
-    "version": "1.1.1",
-    "widgets": [
-        {
-            "category": "utility",
-            "id": "example",
-            "icon": "fas fa-code",
-            "name": "Example Widget",
-            "description": "This is an example widget for development purposes",
-            "platform": "all",
-            "minWidth": 200,
-            "minHeight": 100,
-            "config": {
-                "exampleBoolean": {
-                    "label": "Example Boolean",
-                    "subLabel": "This is an example boolean config option",
-                    "type": "boolean",
-                    "defaultValue": false
-                },
-                "exampleColorPicker": {
-                    "label": "Example Color Picker",
-                    "subLabel": "This is an example color picker config option",
-                    "type": "color-picker",
-                    "defaultValue": "#ffffff"
-                },
-                "exampleNumber": {
-                    "label": "Example Number",
-                    "subLabel": "This is an example number config option",
-                    "type": "number",
-                    "defaultValue": 0
-                },
-                "exampleDropdown": {
-                    "label": "Example Dropdown",
-                    "subLabel": "This is an example dropdown config option",
-                    "type": "select",
-                    "options": [
-                        "option1",
-                        "option2",
-                        "option3"
-                    ],
-                    "defaultValue": "option1"
-                },
-                "exampleWidgetPicker": {
-                    "label": "Example Widget Picker",
-                    "subLabel": "This is an example widget picker config option",
-                    "type": "widget"
-                }
-            }
+  "icon": "img/icon.png",
+  "name": "View Switcher",
+  "description": "Switch between views with the press of a button.",
+  "assets": ["img"],
+  "version": "1.0.1",
+  "widgets": [
+    {
+      "category": "control",
+      "id": "view-switcher",
+      "icon": "img/icon.png",
+      "name": "View Switch",
+      "description": "Switch to a configured view when the widget is pressed.",
+      "platform": "all",
+      "minWidth": 100,
+      "minHeight": 100,
+      "config": {
+        "view": {
+          "label": "View",
+          "subLabel": "The view number to activate when pressed.",
+          "type": "number",
+          "defaultValue": 1
         }
-    ]
+      }
+    }
+  ]
 }

@@ -12,21 +12,21 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/brood-works/displayduck-pack-example">
+  <a href="https://github.com/pondhub-io/displayduck-view-switcher">
     <img src="logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">DisplayDuck Example Widget</h3>
+  <h3 align="center">DisplayDuck View Switcher</h3>
 
   <p align="center">
-    Example widget for developers to fork and customize.
+    Switch between views with the press of a button.
   </p>
 </div>
 
 ---
 
 ## About
-This is a passive, single-view example widget for developers to study or fork for custom widgets and packs in DisplayDuck. It shows a live signal that switches between `true` and `false` every two seconds, displays widget configuration values, and demonstrates a local image asset and responsive styling.
+DisplayDuck View Switcher activates a configured DisplayDuck view when the widget is pressed. The widget displays the configured view number and can be placed on any view.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -48,13 +48,9 @@ Use `npm run development` while editing to rebuild the pack automatically.
 ## Configurable options
 | Setting | Type | Configurable Values | Default Value |
 |---|---|---|---|
-| Example Boolean | `boolean` | `true`<br />`false` | `false` |
-| Example Color Picker | `color-picker` | `color` | `#ffffff` |
-| Example Number | `number` | any `number` | `0` |
-| Example Select | `select` | `option1`<br />`option2`<br />`option3` | `option1` |
-| Example Widget Select | `widget` | installed widget names | — |
+| View | `number` | the view number to activate | `1` |
 
-The widget also displays the built-in `Allow event access` and `Allow focus grab` settings.
+The widget is available on all platforms.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -73,19 +69,19 @@ If you have a suggestion, please fork the repo and create a pull request. You ca
 
 ### Contributors:
 
-<a href="https://github.com/brood-works/displayduck-pack-example/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=brood-works/displayduck-pack-example" />
+<a href="https://github.com/pondhub-io/displayduck-view-switcher/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=pondhub-io/displayduck-view-switcher" />
 </a>
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/brood-works/displayduck-pack-example.svg
-[contributors-url]: https://github.com/brood-works/displayduck-pack-example/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/brood-works/displayduck-pack-example
-[forks-url]: https://github.com/brood-works/displayduck-pack-example/network/members
-[stars-shield]: https://img.shields.io/github/stars/brood-works/displayduck-pack-example
+[contributors-shield]: https://img.shields.io/github/contributors/pondhub-io/displayduck-view-switcher.svg
+[contributors-url]: https://github.com/pondhub-io/displayduck-view-switcher/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/pondhub-io/displayduck-view-switcher
+[forks-url]: https://github.com/pondhub-io/displayduck-view-switcher/network/members
+[stars-shield]: https://img.shields.io/github/stars/pondhub-io/displayduck-view-switcher
 [stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/brood-works/displayduck-pack-example
+[issues-shield]: https://img.shields.io/github/issues/pondhub-io/displayduck-view-switcher
 [issues-url]: https://github.com/othneildrew/Best-README-Template/issues
