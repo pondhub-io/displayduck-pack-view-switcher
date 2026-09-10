@@ -3,7 +3,7 @@
   "name": "View Switcher",
   "description": "Switch between views with the press of a button.",
   "assets": ["img"],
-  "version": "1.0.2",
+  "version": "1.1.0",
   "widgets": [
     {
       "category": "control",
